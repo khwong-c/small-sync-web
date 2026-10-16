@@ -1,0 +1,471 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
+/* ========================================================
+   SURFACE COLOR TOKENS (Light Mode)
+   Only surface/background elements. Glass devices and packets
+   keep their hardcoded colors in the TSX file.
+   ======================================================== */
+
+.sync-animation {
+  /* Background */
+  --sync-bg-start: #ffffff;
+  --sync-bg-end: #f8fafc;
+  --sync-bg-border: #e0f2fe;
+
+  /* Dot grid */
+  --sync-dot-fill: #94a3b8;
+  --sync-dot-opacity: 0.22;
+
+  /* Shadows */
+  --sync-shadow-flood: #0f172a;
+  --sync-shadow-flood-opacity: 0.08;
+  --sync-shadow-blue-flood: #0284c7;
+  --sync-shadow-blue-flood-opacity: 0.06;
+  --sync-server-glow-flood: #0284c7;
+  --sync-server-glow-opacity: 0.14;
+
+  /* Header bar */
+  --sync-header-bg: #ffffff;
+  --sync-header-border: #e2e8f0;
+  --sync-badge-bg: #f0f9ff;
+  --sync-badge-border: #bae6fd;
+  --sync-badge-dot: #0284c7;
+  --sync-badge-text: #0369a1;
+  --sync-title-text: #1e293b;
+  --sync-live-bg: #f8fafc;
+  --sync-live-border: #e2e8f0;
+  --sync-live-text: #475569;
+
+  /* Communication lanes */
+  --sync-lane-bg: #bae6fd;
+  --sync-lane-pulse: #0ea5e9;
+
+  /* Step timeline */
+  --sync-timeline-bg: #ffffff;
+  --sync-timeline-border: #e2e8f0;
+  --sync-timeline-label: #0369a1;
+  --sync-step-bg: #f8fafc;
+  --sync-step-text: #0f172a;
+  --sync-step-text-on-color: #ffffff;
+  --sync-step-arrow: #cbd5e1;
+  --sync-loop-bg: #f0f9ff;
+  --sync-loop-border: #bae6fd;
+  --sync-loop-arrow-1: #0284c7;
+  --sync-loop-arrow-2: #0ea5e9;
+
+  /* Server Card */
+  --sync-server-ripple: #0ea5e9;
+  --sync-server-housing-fill: #ffffff;
+  --sync-server-housing-stroke: #bae6fd;
+  --sync-server-inner-fill: #f0f9ff;
+  --sync-server-brand-text: #0f172a;
+  --sync-server-panel-fill: #ffffff;
+  --sync-server-panel-stroke: #e0f2fe;
+  --sync-server-hub-text: #0284c7;
+}
+
+/* ========================================================
+   DARK MODE SURFACE COLOR OVERRIDES
+   ======================================================== */
+[data-theme="dark"] .sync-animation {
+  /* Background */
+  --sync-bg-start: #0a0e16;
+  --sync-bg-end: #0f131c;
+  --sync-bg-border: rgba(56, 189, 248, 0.25);
+
+  /* Dot grid */
+  --sync-dot-fill: #64748b;
+
+  /* Shadows */
+  --sync-shadow-flood: #000000;
+  --sync-shadow-flood-opacity: 0.5;
+  --sync-shadow-blue-flood: #38bdf8;
+  --sync-shadow-blue-flood-opacity: 0.05;
+  --sync-server-glow-flood: #38bdf8;
+  --sync-server-glow-opacity: 0.2;
+
+  /* Header bar */
+  --sync-header-bg: #131c2e;
+  --sync-header-border: rgba(148, 163, 184, 0.12);
+  --sync-badge-bg: rgba(56, 189, 248, 0.1);
+  --sync-badge-border: rgba(56, 189, 248, 0.3);
+  --sync-badge-dot: #38bdf8;
+  --sync-badge-text: #38bdf8;
+  --sync-title-text: #f8fafc;
+  --sync-live-bg: #0d1321;
+  --sync-live-border: rgba(148, 163, 184, 0.12);
+  --sync-live-text: #94a3b8;
+
+  /* Communication lanes */
+  --sync-lane-bg: rgba(56, 189, 248, 0.25);
+  --sync-lane-pulse: #38bdf8;
+
+  /* Step timeline */
+  --sync-timeline-bg: #131c2e;
+  --sync-timeline-border: rgba(148, 163, 184, 0.12);
+  --sync-timeline-label: #38bdf8;
+  --sync-step-bg: #1a253b;
+  --sync-step-text: #f8fafc;
+  --sync-step-text-on-color: #080c14;
+  --sync-step-arrow: #3e484f;
+  --sync-loop-bg: rgba(56, 189, 248, 0.1);
+  --sync-loop-border: rgba(56, 189, 248, 0.3);
+  --sync-loop-arrow-1: #38bdf8;
+  --sync-loop-arrow-2: #0ea5e9;
+
+  /* Server Card */
+  --sync-server-ripple: #38bdf8;
+  --sync-server-housing-fill: #131c2e;
+  --sync-server-housing-stroke: rgba(56, 189, 248, 0.3);
+  --sync-server-inner-fill: #0d1321;
+  --sync-server-brand-text: #f8fafc;
+  --sync-server-panel-fill: #1a253b;
+  --sync-server-panel-stroke: rgba(148, 163, 184, 0.12);
+  --sync-server-hub-text: #38bdf8;
+}
+
+.sync-animation text {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+.sync-animation .mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ========================================================
+   MASTER 16s PROTOCOL TIMELINE CHOREOGRAPHY
+   
+   PHASE A (MacBook Pro initiated edit: Dark Glass toggle ON):
+   t = 0.6s - 2.6s (3.75% - 16.25%): MacBook user toggles Dark Glass ON, sends UPDATE to Server
+   t = 2.6s - 4.4s (16.25% - 27.5%): Server processes update, notifies iPad Pro (NOTIFY)
+     * Notice: iPad Pro DOES NOT toggle yet!
+   t = 4.6s - 6.2s (28.75% - 38.75%): iPad Pro sends GET /prefs to Server
+   t = 6.2s - 7.6s (38.75% - 47.5%): Server returns DELTA 200 payload stream
+   t = 7.6s (47.5%): iPad Pro RECEIVES payload -> NOW iPad Pro Dark Glass switches ON!
+
+   PHASE B (iPad Pro initiated edit: Night Mode toggle ON):
+   t = 8.6s - 10.6s (53.75% - 66.25%): iPad Pro user toggles Night Mode ON, sends UPDATE to Server
+   t = 10.6s - 12.4s (66.25% - 77.5%): Server processes update, notifies MacBook Pro (NOTIFY)
+     * Notice: MacBook Pro DOES NOT toggle yet!
+   t = 12.6s - 14.2s (78.75% - 88.75%): MacBook Pro sends GET /prefs to Server
+   t = 14.2s - 15.4s (88.75% - 96.25%): Server returns DELTA 200 payload stream
+   t = 15.4s (96.25%): MacBook Pro RECEIVES payload -> NOW MacBook Pro Night Mode switches ON!
+   ======================================================== */
+
+/* Packet 1: MacBook -> Server (UPDATE) */
+@keyframes animMacToServerUpdate {
+  0%, 3.5% { opacity: 0; transform: translate(255px, 220px) scale(0.6); }
+  4% { opacity: 1; transform: translate(255px, 220px) scale(1); }
+  15.5% { opacity: 1; transform: translate(430px, 220px) scale(1); }
+  16.5%, 100% { opacity: 0; transform: translate(445px, 220px) scale(0.6); }
+}
+
+/* Packet 2: Server -> iPad (NOTIFY) */
+@keyframes animServerToPadNotify {
+  0%, 16.5% { opacity: 0; transform: translate(530px, 220px) scale(0.6); }
+  17.5% { opacity: 1; transform: translate(530px, 220px) scale(1); }
+  26.5% { opacity: 1; transform: translate(705px, 220px) scale(1); }
+  27.5%, 100% { opacity: 0; transform: translate(720px, 220px) scale(0.6); }
+}
+
+/* Packet 3: iPad -> Server (GET /prefs) */
+@keyframes animPadToServerFetch {
+  0%, 28% { opacity: 0; transform: translate(705px, 220px) scale(0.6); }
+  29% { opacity: 1; transform: translate(705px, 220px) scale(1); }
+  38% { opacity: 1; transform: translate(530px, 220px) scale(1); }
+  39%, 100% { opacity: 0; transform: translate(515px, 220px) scale(0.6); }
+}
+
+/* Packet 3b: Server -> iPad (DELTA 200 Payload) */
+@keyframes animServerToPadPayload {
+  0%, 39% { opacity: 0; transform: translate(530px, 220px) scale(0.7); }
+  40% { opacity: 1; transform: translate(530px, 220px) scale(1); }
+  47% { opacity: 1; transform: translate(705px, 220px) scale(1); }
+  48%, 100% { opacity: 0; transform: translate(720px, 220px) scale(0.7); }
+}
+
+/* Packet 4: iPad -> Server (UPDATE) */
+@keyframes animPadToServerUpdate {
+  0%, 53.5% { opacity: 0; transform: translate(705px, 220px) scale(0.6); }
+  54% { opacity: 1; transform: translate(705px, 220px) scale(1); }
+  65.5% { opacity: 1; transform: translate(530px, 220px) scale(1); }
+  66.5%, 100% { opacity: 0; transform: translate(515px, 220px) scale(0.6); }
+}
+
+/* Packet 5: Server -> MacBook (NOTIFY) */
+@keyframes animServerToMacNotify {
+  0%, 66.5% { opacity: 0; transform: translate(430px, 220px) scale(0.6); }
+  67.5% { opacity: 1; transform: translate(430px, 220px) scale(1); }
+  76.5% { opacity: 1; transform: translate(255px, 220px) scale(1); }
+  77.5%, 100% { opacity: 0; transform: translate(240px, 220px) scale(0.6); }
+}
+
+/* Packet 6: MacBook -> Server (GET /prefs) */
+@keyframes animMacToServerFetch {
+  0%, 78% { opacity: 0; transform: translate(255px, 220px) scale(0.6); }
+  79% { opacity: 1; transform: translate(255px, 220px) scale(1); }
+  88% { opacity: 1; transform: translate(430px, 220px) scale(1); }
+  89%, 100% { opacity: 0; transform: translate(445px, 220px) scale(0.6); }
+}
+
+/* Packet 6b: Server -> MacBook (DELTA 200 Payload) */
+@keyframes animServerToMacPayload {
+  0%, 89% { opacity: 0; transform: translate(430px, 220px) scale(0.7); }
+  90% { opacity: 1; transform: translate(430px, 220px) scale(1); }
+  95.5% { opacity: 1; transform: translate(255px, 220px) scale(1); }
+  96.5%, 100% { opacity: 0; transform: translate(240px, 220px) scale(0.7); }
+}
+
+/* ========================================================
+   DEVICE TOGGLE STATES (STRICT FETCH-FIRST LOGIC)
+   ======================================================== */
+
+/* Toggle 1: Dark Glass
+   MacBook edits at t = 3.5% -> turns ON until loop reset at 97%
+   iPad receives DELTA at t = 47.5% -> ONLY THEN turns ON!
+*/
+@keyframes macDarkGlassKnob {
+  0%, 3.4% { transform: translateX(0); fill: #94a3b8; }
+  3.5%, 97% { transform: translateX(18px); fill: #38bdf8; }
+  97.1%, 100% { transform: translateX(0); fill: #94a3b8; }
+}
+
+@keyframes macDarkGlassTrack {
+  0%, 3.4% { fill: #334155; }
+  3.5%, 97% { fill: #0284c7; }
+  97.1%, 100% { fill: #334155; }
+}
+
+@keyframes padDarkGlassKnob {
+  0%, 47.4% { transform: translateX(0); fill: #cbd5e1; }
+  47.5%, 97% { transform: translateX(18px); fill: #0284c7; }
+  97.1%, 100% { transform: translateX(0); fill: #cbd5e1; }
+}
+
+@keyframes padDarkGlassTrack {
+  0%, 47.4% { fill: #ffffff; fill-opacity: 0.3; }
+  47.5%, 97% { fill: #ffffff; fill-opacity: 0.95; }
+  97.1%, 100% { fill: #ffffff; fill-opacity: 0.3; }
+}
+
+/* Toggle 2: Night Mode
+   iPad edits at t = 53.5% -> turns ON until loop reset at 97%
+   MacBook receives DELTA at t = 96.0% -> ONLY THEN turns ON!
+*/
+@keyframes padNightModeKnob {
+  0%, 53.4% { transform: translateX(0); fill: #cbd5e1; }
+  53.5%, 97% { transform: translateX(18px); fill: #0284c7; }
+  97.1%, 100% { transform: translateX(0); fill: #cbd5e1; }
+}
+
+@keyframes padNightModeTrack {
+  0%, 53.4% { fill: #ffffff; fill-opacity: 0.3; }
+  53.5%, 97% { fill: #ffffff; fill-opacity: 0.95; }
+  97.1%, 100% { fill: #ffffff; fill-opacity: 0.3; }
+}
+
+@keyframes macNightModeKnob {
+  0%, 95.9% { transform: translateX(0); fill: #94a3b8; }
+  96.0%, 99% { transform: translateX(18px); fill: #38bdf8; }
+  99.1%, 100% { transform: translateX(0); fill: #94a3b8; }
+}
+
+@keyframes macNightModeTrack {
+  0%, 95.9% { fill: #334155; }
+  96.0%, 99% { fill: #0284c7; }
+  99.1%, 100% { fill: #334155; }
+}
+
+/* Confirmation Badges */
+@keyframes padSyncBadge {
+  0%, 46.5% { opacity: 0; transform: scale(0.85); }
+  47.5%, 52.5% { opacity: 1; transform: scale(1); }
+  53.5%, 100% { opacity: 0; }
+}
+
+@keyframes macSyncBadge {
+  0%, 95% { opacity: 0; transform: scale(0.85); }
+  96%, 98.5% { opacity: 1; transform: scale(1); }
+  99%, 100% { opacity: 0; }
+}
+
+/* Server pulse on ingestion */
+@keyframes serverActivityLed {
+  0%, 15% { fill: #94a3b8; opacity: 0.4; }
+  16%, 20% { fill: #0ea5e9; opacity: 1; filter: drop-shadow(0 0 6px #38bdf8); }
+  21%, 38% { fill: #10b981; opacity: 1; }
+  39%, 47% { fill: #0ea5e9; opacity: 1; }
+  48%, 65% { fill: #94a3b8; opacity: 0.4; }
+  66%, 70% { fill: #ea580c; opacity: 1; filter: drop-shadow(0 0 6px #fb923c); }
+  71%, 88% { fill: #10b981; opacity: 1; }
+  89%, 96% { fill: #0ea5e9; opacity: 1; }
+  97%, 100% { fill: #94a3b8; opacity: 0.4; }
+}
+
+@keyframes serverRipple {
+  0%, 15% { transform: scale(0.9); opacity: 0; }
+  16% { transform: scale(1); opacity: 0.7; }
+  22% { transform: scale(1.35); opacity: 0; }
+  65% { transform: scale(0.9); opacity: 0; }
+  66% { transform: scale(1); opacity: 0.7; }
+  72% { transform: scale(1.35); opacity: 0; }
+  100% { transform: scale(0.9); opacity: 0; }
+}
+
+/* Step Timeline Glows */
+@keyframes step1Glow {
+  0%, 3% { opacity: 0.35; }
+  4%, 16% { opacity: 1; }
+  17%, 100% { opacity: 0.35; }
+}
+
+@keyframes step2Glow {
+  0%, 16% { opacity: 0.35; }
+  17%, 27% { opacity: 1; }
+  28%, 100% { opacity: 0.35; }
+}
+
+@keyframes step3Glow {
+  0%, 28% { opacity: 0.35; }
+  29%, 48% { opacity: 1; }
+  49%, 100% { opacity: 0.35; }
+}
+
+@keyframes step4Glow {
+  0%, 53% { opacity: 0.35; }
+  54%, 66% { opacity: 1; }
+  67%, 100% { opacity: 0.35; }
+}
+
+@keyframes step5Glow {
+  0%, 66% { opacity: 0.35; }
+  67%, 77% { opacity: 1; }
+  78%, 100% { opacity: 0.35; }
+}
+
+@keyframes step6Glow {
+  0%, 78% { opacity: 0.35; }
+  79%, 96% { opacity: 1; }
+  97%, 100% { opacity: 0.35; }
+}
+
+/* Single Lane Bi-directional Pulse */
+@keyframes laneDashPulse {
+  from { stroke-dashoffset: 40; }
+  to { stroke-dashoffset: 0; }
+}
+
+.sync-animation .lane-pulse {
+  stroke-dasharray: 6 6;
+  animation: laneDashPulse 1.4s linear infinite;
+}
+
+/* Packet animation classes */
+.sync-animation .pkt-mac-update {
+  animation: animMacToServerUpdate 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.sync-animation .pkt-server-notify-pad {
+  animation: animServerToPadNotify 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.sync-animation .pkt-pad-fetch {
+  animation: animPadToServerFetch 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.sync-animation .pkt-server-payload-pad {
+  animation: animServerToPadPayload 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.sync-animation .pkt-pad-update {
+  animation: animPadToServerUpdate 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.sync-animation .pkt-server-notify-mac {
+  animation: animServerToMacNotify 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.sync-animation .pkt-mac-fetch {
+  animation: animMacToServerFetch 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.sync-animation .pkt-server-payload-mac {
+  animation: animServerToMacPayload 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Toggle animation classes */
+.sync-animation .mac-dark-glass-knob {
+  animation: macDarkGlassKnob 16s ease-in-out infinite;
+}
+
+.sync-animation .mac-dark-glass-track {
+  animation: macDarkGlassTrack 16s ease-in-out infinite;
+}
+
+.sync-animation .pad-dark-glass-knob {
+  animation: padDarkGlassKnob 16s ease-in-out infinite;
+}
+
+.sync-animation .pad-dark-glass-track {
+  animation: padDarkGlassTrack 16s ease-in-out infinite;
+}
+
+.sync-animation .pad-night-mode-knob {
+  animation: padNightModeKnob 16s ease-in-out infinite;
+}
+
+.sync-animation .pad-night-mode-track {
+  animation: padNightModeTrack 16s ease-in-out infinite;
+}
+
+.sync-animation .mac-night-mode-knob {
+  animation: macNightModeKnob 16s ease-in-out infinite;
+}
+
+.sync-animation .mac-night-mode-track {
+  animation: macNightModeTrack 16s ease-in-out infinite;
+}
+
+/* Badge animation classes */
+.sync-animation .pad-sync-badge {
+  animation: padSyncBadge 16s ease-in-out infinite;
+}
+
+.sync-animation .mac-sync-badge {
+  animation: macSyncBadge 16s ease-in-out infinite;
+}
+
+/* Server animation classes */
+.sync-animation .server-activity-led {
+  animation: serverActivityLed 16s ease-in-out infinite;
+}
+
+.sync-animation .server-ripple {
+  animation: serverRipple 16s ease-out infinite;
+  transform-origin: 40px 75px;
+}
+
+/* Step glow animation classes */
+.sync-animation .step-1-glow {
+  animation: step1Glow 16s ease-in-out infinite;
+}
+
+.sync-animation .step-2-glow {
+  animation: step2Glow 16s ease-in-out infinite;
+}
+
+.sync-animation .step-3-glow {
+  animation: step3Glow 16s ease-in-out infinite;
+}
+
+.sync-animation .step-4-glow {
+  animation: step4Glow 16s ease-in-out infinite;
+}
+
+.sync-animation .step-5-glow {
+  animation: step5Glow 16s ease-in-out infinite;
+}
+
+.sync-animation .step-6-glow {
+  animation: step6Glow 16s ease-in-out infinite;
+}

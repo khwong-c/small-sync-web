@@ -1,0 +1,1 @@
+export { SyncAnimation } from './SyncAnimation';

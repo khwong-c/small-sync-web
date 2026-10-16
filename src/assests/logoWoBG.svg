@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="card1-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="card2-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <filter id="card-shadow" x="-20%" y="-20%" width="150%" height="150%">
+      <feDropShadow dx="-6" dy="14" stdDeviation="16" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+    <filter id="top-card-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="-8" dy="16" stdDeviation="16" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+
+  <!-- Card 1: Rear Card (offset top-left, parallel) -->
+  <g transform="translate(136, 116)" filter="url(#card-shadow)">
+    <!-- Base Card Body -->
+    <rect x="0" y="0" width="160" height="236" rx="28" fill="url(#card1-grad)" stroke="#0284c7" stroke-width="1.2" stroke-opacity="0.6"/>
+    <!-- Minimal UI / Settings Lines -->
+    <rect x="24" y="32" width="72" height="12" rx="6" fill="#ffffff" fill-opacity="0.75"/>
+    <rect x="24" y="56" width="112" height="8" rx="4" fill="#ffffff" fill-opacity="0.35"/>
+    <rect x="24" y="74" width="90" height="8" rx="4" fill="#ffffff" fill-opacity="0.25"/>
+
+    <!-- Mini toggle pill on back card -->
+    <rect x="24" y="104" width="54" height="22" rx="11" fill="#082f49" fill-opacity="0.7"/>
+    <circle cx="61" cy="115" r="7" fill="#38bdf8"/>
+  </g>
+
+  <!-- Card 2: Foreground Card (overlapping parallel to bottom-right, like playing cards) -->
+  <g transform="translate(216, 168)" filter="url(#top-card-shadow)">
+    <!-- Foreground Card Body -->
+    <rect x="0" y="0" width="160" height="236" rx="28" fill="url(#card2-grad)" stroke="#ffffff" stroke-width="2.5" stroke-opacity="0.5"/>
+
+    <!-- Minimal UI / Settings Lines -->
+    <rect x="24" y="32" width="84" height="12" rx="6" fill="#ffffff" fill-opacity="0.95"/>
+    <rect x="24" y="56" width="112" height="8" rx="4" fill="#ffffff" fill-opacity="0.65"/>
+    <rect x="24" y="74" width="96" height="8" rx="4" fill="#ffffff" fill-opacity="0.45"/>
+
+    <!-- Active toggle switch -->
+    <rect x="24" y="106" width="60" height="24" rx="12" fill="#ffffff" fill-opacity="0.95"/>
+    <circle cx="67" cy="118" r="8" fill="#0284c7"/>
+
+    <!-- Status dot -->
+    <circle cx="132" cy="38" r="5" fill="#ffffff" fill-opacity="0.9"/>
+  </g>
+</svg>
