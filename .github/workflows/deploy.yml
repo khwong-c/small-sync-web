@@ -96,7 +96,6 @@ jobs:
           retention-days: 30
 
       - name: Stop server
-        if: always()
         cancel: server
 
   deploy:
