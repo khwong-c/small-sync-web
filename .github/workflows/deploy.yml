@@ -72,11 +72,17 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install chromium --with-deps
 
-      - name: Download build artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: dist
-          path: dist/
+      - name: Run Server in the background
+        id: server
+        background: true
+        run: |
+          pnpm run dev
+
+      - name: Wait for server to start
+        run: |
+          until curl -s http://localhost:3000 > /dev/null; do
+            sleep 1
+          done
 
       - name: Run Playwright tests
         run: pnpm exec playwright test
@@ -88,6 +94,10 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+      - name: Stop server
+        if: always()
+        cancel: server
 
   deploy:
     name: Deploy to GitHub Pages
